@@ -198,6 +198,15 @@ int main(int argc, char *argv[]) {
 		execute(newArgs);
 	} else { // enter shell mode
 		while (1) {
+			// print prompt
+			cout << prompt << " ";
+
+			char line[MAX_CHARS];
+			char *token;
+			int position = 0;
+
+			cin.getline(line, MAX_CHARS); // read in line
+
 			// check for finishing background processes
 			for (unsigned long j = 0; j < children.size(); j++) {
 				int childStatus;
@@ -208,15 +217,6 @@ int main(int argc, char *argv[]) {
 					children.erase(children.begin() + j);
 				}
 			}
-
-			// print prompt
-			cout << prompt << " ";
-
-			char line[MAX_CHARS];
-			char *token;
-			int position = 0;
-
-			cin.getline(line, MAX_CHARS); // read in line
 
 			// tokenize the input line
 			token = strtok(line, " ");
