@@ -136,7 +136,6 @@ int execute(char ** newArgs) {
 }
 
 /* grabs a line from cin and executes it. */
-/* returns 1 if the execution should stop (because of "exit" or error), 0 otherwise */
 int doLine(char **out) {
 	char line[MAX_CHARS];
 	char *token;
@@ -185,7 +184,6 @@ int doLine(char **out) {
 int main(int argc, char *argv[]) {
 	char **newArgs = (char **)malloc(MAX_ARGS * sizeof(char *));
 	int i;
-	int status = 0;
 	prompt[0] = '=';
 	prompt[1] = '=';
 	prompt[2] = '>';
@@ -199,7 +197,7 @@ int main(int argc, char *argv[]) {
 		newArgs[argc - 1] = NULL;
 		execute(newArgs);
 	} else { // enter shell mode
-		while (!status) {
+		while (1) {
 			// check for finishing background processes
 			for (unsigned long j = 0; j < children.size(); j++) {
 				int childStatus;
@@ -210,8 +208,50 @@ int main(int argc, char *argv[]) {
 					children.erase(children.begin() + j);
 				}
 			}
+
+			// print prompt
 			cout << prompt << " ";
-			status = doLine(newArgs);
+
+			char line[MAX_CHARS];
+			char *token;
+			int position = 0;
+
+			cin.getline(line, MAX_CHARS); // read in line
+
+			// tokenize the input line
+			token = strtok(line, " ");
+			while (token != NULL) {
+				newArgs[position] = token;
+				token = strtok(NULL, " ");	
+				position++;
+			}
+
+			if (strcmp(newArgs[position - 1], "&") == 0) { // background process
+				ampersand = 1;
+				newArgs[position - 1] = NULL;
+			} else {
+				ampersand = 0;
+				newArgs[position] = NULL;
+			}
+			if (strcmp(newArgs[0], "exit") == 0) { // exit command
+				safeExit();
+			} else if (strcmp(newArgs[0], "cd") == 0 && newArgs[1] != NULL)  { // cd command
+				if (chdir(newArgs[1]) != 0)
+					cerr << "chdir error\n";
+			} else if (strcmp(newArgs[0], "set") == 0 && strcmp(newArgs[1], "prompt") == 0 && strcmp(newArgs[2], "=") == 0 && newArgs[3] != NULL) { // set prompt command
+				strcpy(prompt, newArgs[3]);
+			} else if (strcmp(newArgs[0], "jobs") == 0) {
+				if (children.size() == 0) {
+					cout << "No jobs running\n";
+				} else {
+					for (unsigned long i = 0; i < children.size(); i++) {
+						cout << "[" << i + 1 << "] " << children[i].pid << " " << children[i].cmd << endl;
+			}
+				}
+			} else {
+				execute(newArgs);
+			}
+			//doLine(newArgs);
 		}
 	}
 }
