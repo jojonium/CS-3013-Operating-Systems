@@ -1,5 +1,40 @@
-/* doit.C */
-/* Joseph Petitti - CS 3013 Project 1 */
+/* doit.C
+ *
+ * Joseph Petitti - CS 3013 Project 1 
+ *
+ *
+ * This project implements a command shell that accepts Linux commands from a user,
+ * forks off a child process, and executes the command in the child. It also prints
+ * out usage statistics for the process after completion.
+ *
+ * The project can be compiled with the 'make' command, and executed by running the
+ * file 'doit'. The 'doit' program takes another command as an agrument and executes
+ * that command. For instance, executing:
+ * 
+ * % ./doit wc foo.txt
+ *
+ * would invoke the 'wc' (word count) command with an argument of 'foo.txt'. After
+ * execution of the specified command has completed, doit will display statistics
+ * that show some of the resources the command used.
+ *
+ * The shell includes several built-in commands:
+ * 	exit - causes the shell to terminate
+ * 	cd dir - causes the shell to change the directory to dir
+ * 	set prompt = newprompt - causes the shell to change the prompt to newprompt
+ *
+ * This shell mode also supports running tasks in the background, indicated by
+ * appending an ampersand character, '&', to the argument list. The 'jobs' command
+ * will show a list of all running background tasks. If the user tries to exit the
+ * shell with the 'exit' command while there are still background tasks running, the
+ * shell will wait for the background tasks to complete before exiting.
+ *
+ * This simple shell is powerful, but still lacks many of the features common in
+ * regular Linux shells. There is no tab completion, and it doesn't store previously
+ * used commands. It also does not support many of the customization options of
+ * regular Linux shells, such as command aliases.
+ *
+*/
+
 #include <iostream>
 using namespace std;
 #include <sys/types.h>
