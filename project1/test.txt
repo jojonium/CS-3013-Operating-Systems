@@ -1,0 +1,179 @@
+Script started on 2018-08-30 23:17:47-0400
+]0;jojonium@lilith:~/Documents/WPI_Year_3/A/CS3013[jojonium@lilith CS3013]$ ./doit lw[Ks -l
+total 1296
+-rwxrwxr-x. 1 jojonium jojonium   35736 Aug 30 23:07 doit
+-rw-rw-r--. 1 jojonium jojonium    7746 Aug 30 15:33 doit.cpp
+-rw-rw-r--. 1 jojonium jojonium      87 Aug 30 11:12 makefile
+-rw-rw-r--. 1 jojonium jojonium 1276201 Aug 30 11:12 moby_dick.txt
+-rw-rw-r--. 1 jojonium jojonium       0 Aug 30 23:17 test.txt
+USAGE STATISTICS:
+*** system time = 2 milliseconds
+*** user time = 0 milliseconds
+*** wall clock time = 2 milliseconds
+*** involuntary context switches = 0
+*** voluntary context switches = 1
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 142
+*** maximum resident set size = 3092 kilobytes
+]0;jojonium@lilith:~/Documents/WPI_Year_3/A/CS3013[jojonium@lilith CS3013]$ ./doit sleep 3
+USAGE STATISTICS:
+*** system time = 1 milliseconds
+*** user time = 1 milliseconds
+*** wall clock time = 3003 milliseconds
+*** involuntary context switches = 0
+*** voluntary context switches = 2
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 85
+*** maximum resident set size = 2172 kilobytes
+]0;jojonium@lilith:~/Documents/WPI_Year_3/A/CS3013[jojonium@lilith CS3013]$ ./doit time grep 'asdf[K[K[K[K[K-R asdf[K[K[K[K'lasdkfjlakdsjf' ./
+0.00user 0.01system 0:00.18elapsed 11%CPU (0avgtext+0avgdata 2408maxresident)k
+1488inputs+0outputs (0major+109minor)pagefaults 0swaps
+USAGE STATISTICS:
+*** system time = 16 milliseconds
+*** user time = 10 milliseconds
+*** wall clock time = 202 milliseconds
+*** involuntary context switches = 0
+*** voluntary context switches = 46
+*** page faults requiring I/O = 1
+*** page faults serviced without I/O = 191
+*** maximum resident set size = 2408 kilobytes
+]0;jojonium@lilith:~/Documents/WPI_Year_3/A/CS3013[jojonium@lilith CS3013]$ ./doit
+==> set prompt = m prompt:
+prompt: set prompt = ==>
+==> cd ..     ls
+doit  doit.cpp	makefile  moby_dick.txt  test.txt
+USAGE STATISTICS:
+*** system time = 2 milliseconds
+*** user time = 3 milliseconds
+*** wall clock time = 6 milliseconds
+*** involuntary context switches = 0
+*** voluntary context switches = 1
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 116
+*** maximum resident set size = 2380 kilobytes
+==> cd ..
+==> pwd
+/home/jojonium/Documents/WPI_Year_3/A
+USAGE STATISTICS:
+*** system time = 2 milliseconds
+*** user time = 3 milliseconds
+*** wall clock time = 1 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 2
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 197
+*** maximum resident set size = 2380 kilobytes
+==> ls
+CS3013	CS3516	GE2341	SA
+USAGE STATISTICS:
+*** system time = 5 milliseconds
+*** user time = 5 milliseconds
+*** wall clock time = 5 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 3
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 315
+*** maximum resident set size = 2380 kilobytes
+==> cd CS	3013
+==> ls
+doit  doit.cpp	makefile  moby_dick.txt  test.txt
+USAGE STATISTICS:
+*** system time = 10 milliseconds
+*** user time = 6 milliseconds
+*** wall clock time = 6 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 4
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 433
+*** maximum resident set size = 2392 kilobytes
+==> sleep 4 &
+[1] 21414
+==> sleep 5 &
+[2] 21415
+==> sleep 6 &
+[1] 21414 Completed
+USAGE STATISTICS:
+*** system time = 13 milliseconds
+*** user time = 6 milliseconds
+*** wall clock time = 5220 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 6
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 512
+*** maximum resident set size = 2392 kilobytes
+[2] 21416
+==> jobs
+[1] 21415 sleep
+[2] 21416 sleep
+==> ls
+[1] 21415 Completed
+USAGE STATISTICS:
+*** system time = 16 milliseconds
+*** user time = 6 milliseconds
+*** wall clock time = 6037 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 8
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 591
+*** maximum resident set size = 2392 kilobytes
+doit  doit.cpp	makefile  moby_dick.txt  test.txt
+USAGE STATISTICS:
+*** system time = 18 milliseconds
+*** user time = 10 milliseconds
+*** wall clock time = 7 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 9
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 710
+*** maximum resident set size = 2588 kilobytes
+==> pwd
+/home/jojonium/Documents/WPI_Year_3/A/CS3013
+USAGE STATISTICS:
+*** system time = 20 milliseconds
+*** user time = 11 milliseconds
+*** wall clock time = 4 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 10
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 793
+*** maximum resident set size = 2588 kilobytes
+==> sleep 10 &
+[1] 21416 Completed
+USAGE STATISTICS:
+*** system time = 24 milliseconds
+*** user time = 11 milliseconds
+*** wall clock time = 42358 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 12
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 875
+*** maximum resident set size = 2588 kilobytes
+[1] 21428
+==> sleep 11 &
+[2] 21429
+==> exit
+Waiting for 2 process(es) to finish
+[1] 21428 Completed
+USAGE STATISTICS:
+*** system time = 26 milliseconds
+*** user time = 12 milliseconds
+*** wall clock time = 10004 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 14
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 954
+*** maximum resident set size = 2588 kilobytes
+[2] 21429 Completed
+USAGE STATISTICS:
+*** system time = 29 milliseconds
+*** user time = 12 milliseconds
+*** wall clock time = 11004 milliseconds
+*** involuntary context switches = 1
+*** voluntary context switches = 16
+*** page faults requiring I/O = 0
+*** page faults serviced without I/O = 1038
+*** maximum resident set size = 2588 kilobytes
+]0;jojonium@lilith:~/Documents/WPI_Year_3/A/CS3013[jojonium@lilith CS3013]$ exit
+exit
+
+Script done on 2018-08-30 23:21:05-0400
