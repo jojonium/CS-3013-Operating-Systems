@@ -1,5 +1,5 @@
-# CS3013 Operating Systems
-==========================
+CS3013 Operating Systems
+========================
 
 Coursework and projects from the WPI computer science class CS3013 - Operating Systems.
 
