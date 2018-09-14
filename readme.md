@@ -93,7 +93,14 @@ struct processinfo {
 ```
 
 `test.c` is a simple C program to test the system call modifications. After compiling the Loadable
-Kernel Module from `mymodule.c` with the `make` command, insert it into the kernel using
-`sudo insmod mymodule.ko`. Then compile the test program with `gcc test.c -o test` and run it with
-`./test`. It should call the modified `cs3013_syscall2` and print out all the information stored in
-a new user-level `struct processinfo`.
+Kernel Module from `mymodule.c` and the test executable from test.c with the `make` command, insert
+it into the kernel using:
+
+`sudo insmod mymodule.ko`
+
+Then compile the test program with:
+
+`gcc test.c -o test`
+
+and run it with `./test`. It should call the modified `cs3013_syscall2` and print out all the
+information stored in a new user-level `struct processinfo`.
