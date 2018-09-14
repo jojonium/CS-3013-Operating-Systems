@@ -1,3 +1,5 @@
+/* Joseph Petitti and Justin Cheng */
+
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/syscalls.h>
@@ -6,6 +8,7 @@
 //#include "/usr/src/linux-source-4.4.0/linux-source-4.4.0/include/asm-generic/cputime.h"
 //#include "/usr/src/linux-source-4.4.0/linux-source-4.4.0/include/asm-generic/uaccess.h"
 #include <linux/list.h>
+#include <linux/time.h>
 
 unsigned long **sys_call_table;
 
@@ -53,16 +56,69 @@ asmlinkage long new_sys_close(int filedes) {
 asmlinkage long new_sys_cs3013_syscall2(struct processinfo *info) {
 	struct processinfo out;
 	struct task_struct *ts = current;
-	
+	struct task_struct *temp;
+	struct list_head *pos;
+	long long youngest_child_time;
+	long long younger_sibling_time;
+	long long older_sibling_time;
+
 	printk(KERN_INFO "Started new_sys_cs3013_syscall2\n");
 
 	out.state = ts->state;
 	out.pid = ts->pid;
 	out.parent_pid = ts->parent->pid;
-	// youngest_child
-	// younger_sibling
-	// older_sibling
+	out.start_time = ts->start_time;
+
+	if (list_empty(&(ts->children))) { // if no children
+		out.youngest_child = -1;
+		out.cutime = -1;
+		out.cstime = -1;
+	} else { // walk through list of children
+		out.cutime = 0;
+		out.cstime = 0;
+		youngest_child_time = -1;
+		list_for_each(pos, &(ts->children)) {
+			temp = list_entry(pos, struct task_struct, sibling);
+			out.cutime += cputime_to_usecs((temp->utime));
+			out.cstime += cputime_to_usecs((temp->stime));
+
+			// check if this is the youngest child we've seen
+			if (temp->start_time < youngest_child_time || youngest_child_time == -1) {
+				youngest_child_time = temp->start_time;
+				out.youngest_child = temp->pid;
+			}
+		}
+	}
+
+
+	if (list_is_singular(&(ts->sibling))) {
+		out.younger_sibling = -1;
+		out.older_sibling = -1;
+		younger_sibling_time = -1;
+	} else {
+		older_sibling_time = -1;
+		younger_sibling_time = -1;
+
+		list_for_each(pos, &(ts->sibling)) {
+			temp = list_entry(pos, struct task_struct, sibling);
+			
+			// check if this is the oldest younger child we've seen
+			if (temp->start_time > out.start_time && (temp->start_time < younger_sibling_time || younger_sibling_time == -1)) {
+				younger_sibling_time = temp->start_time;
+				out.younger_sibling = temp->pid;
+			}
+
+			// check if this is the youngest older child we've seen
+			if (temp->start_time < out.start_time && (temp->start_time > older_sibling_time || older_sibling_time == -1)) {
+				older_sibling_time = temp->start_time;
+				out.older_sibling = temp->pid;
+			}
+		}
+	}
+
 	out.uid = current_uid().val;
+	out.user_time = cputime_to_usecs(ts->utime);
+	out.sys_time = cputime_to_usecs(ts->stime);
 
 	if (copy_to_user(info, &out, sizeof(out)))
 		return EFAULT;
