@@ -53,7 +53,8 @@ int main(int argc, char *argv[]) {
 		if (pthread_create(rope[i], NULL, addit, (void *)(intptr_t)(i + 1))) {
 			printf("error creating thread %d\n", i + 1);
 		}
-		printf("made thread #%d\n", i);
+		printf("made thread #%d\n", i + 1);
+		RecvMsg(i, received);
 	}
 
 	printf("made threads\n");
@@ -97,14 +98,23 @@ int main(int argc, char *argv[]) {
 // waits for a message from the parent, then adds the sum of integers 
 // between message->value1 and message->value2 inclusive
 void *addit(void *arg) {
-	printf("in addit\n");
 	int index, out;
 	struct msg *message, *response;
 
+	printf("about to set index\n");
 	index = *((int *)arg);
-	printf("thread number %d\n", index);
-	message = (struct msg *)malloc(sizeof(struct msg));
+	printf("index = %d\n", index);
+	
 	response = (struct msg *)malloc(sizeof(struct msg));
+	// send parent a message to say that we're done using index so it can move on
+	response->iSender = index;
+	response->type = ALLDONE;
+	SendMsg(0, response);
+
+	
+	message = (struct msg *)malloc(sizeof(struct msg));
+	printf("in addit, waiting for mail\n");
+
 	RecvMsg(0, message); // wait for mail from parent
 
 	if (message->type != RANGE || message->value1 > message->value2) {
