@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
 	mailToSend = (struct msg **)malloc(inputThreads * sizeof(struct msg *));
 	semArray = (sem_t *)malloc((inputThreads + 1) * sizeof(sem_t));
 	rope = (pthread_t **)malloc(inputThreads * sizeof(pthread_t *));
+	received = (struct msg *)malloc(sizeof(struct msg));
 
 	printf("allocated memory\n");
 
@@ -47,10 +48,10 @@ int main(int argc, char *argv[]) {
 	printf("made mailboxes\n");
 
 	// make the threads
-	for (i = 1; i <= inputThreads; i++) {
-		printf("ready to make thread %d!\n", i);
-		if (!pthread_create(rope[i], NULL, addit, (void *)(intptr_t)i)) {
-			printf("error creating thread %d\n", i);
+	for (i = 0; i < inputThreads - 1; i++) {
+		rope[i] = (pthread_t *)malloc(sizeof(pthread_t *));
+		if (pthread_create(rope[i], NULL, addit, (void *)(intptr_t)(i + 1))) {
+			printf("error creating thread %d\n", i + 1);
 		}
 		printf("made thread #%d\n", i);
 	}
@@ -61,6 +62,7 @@ int main(int argc, char *argv[]) {
 	step = target / inputThreads;
 	temp = 1;
 	for (i = 0; i < inputThreads; i++) {
+		mailToSend[i] = (struct msg *)malloc(sizeof(struct msg *));
 		mailToSend[i]->iSender = 0;
 		mailToSend[i]->type = RANGE;
 		mailToSend[i]->value1 = temp;
@@ -96,11 +98,13 @@ int main(int argc, char *argv[]) {
 // between message->value1 and message->value2 inclusive
 void *addit(void *arg) {
 	printf("in addit\n");
-	int index;
+	int index, out;
 	struct msg *message, *response;
-	int out;
+
 	index = *((int *)arg);
 	printf("thread number %d\n", index);
+	message = (struct msg *)malloc(sizeof(struct msg));
+	response = (struct msg *)malloc(sizeof(struct msg));
 	RecvMsg(0, message); // wait for mail from parent
 
 	if (message->type != RANGE || message->value1 > message->value2) {
@@ -118,4 +122,6 @@ void *addit(void *arg) {
 	response->value1 = out;
 
 	SendMsg(message->iSender, response); // send the sum back
+
+	return (void *)0;
 }

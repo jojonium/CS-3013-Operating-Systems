@@ -1,5 +1,8 @@
 CFLAGS = -Wall -g
 
+all: project3
+	make project3
+
 project3: project3.o mailbox.o
 	gcc $(CFLAGS) project3.o mailbox.o -o addem -lm -lpthread -lrt
 
