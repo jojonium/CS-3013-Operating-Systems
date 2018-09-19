@@ -16,7 +16,8 @@ struct msg {
 // global variables
 struct msg **postOffice; // because it contains a bunch of mailboxes
 pthread_t **rope;        // because it's made of threads
-sem_t *semArray;         // couldn't think of a clever name for this one
+sem_t **semArray1;
+sem_t **semArray2;
 int inputThreads;
 
 int SendMsg(int iTo, struct msg *pMsg);
