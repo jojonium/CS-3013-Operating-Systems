@@ -50,11 +50,10 @@ int main(int argc, char *argv[]) {
 	// make the threads
 	for (i = 0; i < inputThreads - 1; i++) {
 		rope[i] = (pthread_t *)malloc(sizeof(pthread_t *));
-		if (pthread_create(rope[i], NULL, addit, (void *)(intptr_t)(i + 1))) {
+		if (pthread_create(rope[i], NULL, &addit, (void *)(intptr_t)(i + 1))) {
 			printf("error creating thread %d\n", i + 1);
 		}
 		printf("made thread #%d\n", i + 1);
-		RecvMsg(i, received);
 	}
 
 	printf("made threads\n");
@@ -84,7 +83,7 @@ int main(int argc, char *argv[]) {
 	for (i = 1; i <= inputThreads; i++) {
 		RecvMsg(i, received);
 		if (received->type != ALLDONE) {
-			printf("Child sent wrong type message");
+			printf("Child sent wrong type message\n");
 		}
 		result += received->value1;
 	}
@@ -101,25 +100,21 @@ void *addit(void *arg) {
 	int index, out;
 	struct msg *message, *response;
 
-	printf("about to set index\n");
-	index = *((int *)arg);
-	printf("index = %d\n", index);
+	index = (int)(intptr_t)arg;
 	
 	response = (struct msg *)malloc(sizeof(struct msg));
-	// send parent a message to say that we're done using index so it can move on
-	response->iSender = index;
-	response->type = ALLDONE;
-	SendMsg(0, response);
-
-	
 	message = (struct msg *)malloc(sizeof(struct msg));
 	printf("in addit, waiting for mail\n");
 
 	RecvMsg(0, message); // wait for mail from parent
+	printf("Thread #%d received this message:\n", index);
+	printf("   iSender: %d\n", message->iSender);
+	printf("   type: %d\n", message->type);
+	printf("   value1: %d\n", message->value1);
+	printf("   value2: %d\n", message->value2);
 
-	if (message->type != RANGE || message->value1 > message->value2) {
+	if (message->type != RANGE) {
 		printf("Something went horribly wrong\n");
-		pthread_exit((void *)1);
 	}
 
 	response->iSender = index;

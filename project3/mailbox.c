@@ -13,7 +13,6 @@ int SendMsg(int iTo, struct msg *pMsg) {
 }
 
 int RecvMsg(int iFrom, struct msg *pMsg) {
-	printf("in RecvMsg\n");
 	sem_wait(semArray + iFrom); // wait for mail
 
 	if (iFrom < 0 || iFrom > inputThreads + 1) {
