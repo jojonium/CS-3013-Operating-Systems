@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 		printf("Input file too tall, defaulting to %d rows\n", MAXGRID);
 		rows = MAXGRID;
 	}
-	if (rows > inputThreads) {
+	if (rows < MAXTHREAD && rows > inputThreads) {
 		printf("too few rows for this many threads, decreasing thread count to %d\n", rows);
 		inputThreads = rows;
 	}
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < inputThreads; i++) {
 		SendMsg(i + 1, mailToSend[i]);
 	}
-	
+
 	// fill grids with dead cells
 	for (j = 0; j < rows; j++) {
 		for (i = 0; i < cols; i++) {
@@ -133,12 +133,16 @@ int main(int argc, char *argv[]) {
 	i = 0;
 	j = 0;
 	while ((c = fgetc(fp)) != EOF) {
-		if (c == '1') {
+		if (i >= cols) {
+			i = 0;
+			j++;
+			while ((c = fgetc(fp)) != '\n'); // zoom to end of line
+		} else if (c == '1') {
 			A[i][j] = ON;
 			i++;
 		} else if (c == '0') {
 			i++;
-		} else if (c == '\n' || i >= cols) {
+		} else if (c == '\n') {
 			i = 0;
 			j++;
 		}
@@ -157,10 +161,6 @@ int main(int argc, char *argv[]) {
 			printf("error creating thread %d\n", i + 1);
 		}
 	}
-
-	// testing
-	printf("inputThreads: %d\ngenerations: %ld\nprint: %d\npause: %d\n", inputThreads, gens, doPrint, doPause);
-	printf("rows: %d\ncolumns: %d\n", rows, cols);
 
 	// print gen 0
 	printGrid(A, iteration); 
@@ -207,99 +207,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-
-	
-
-	
-
-	/*	// allocate memory
-	postOffice = (struct msg **)malloc((inputThreads + 1) * sizeof(struct msg *));
-	mailToSend = (struct msg **)malloc(inputThreads * sizeof(struct msg *));
-	semArray1 = (sem_t **)malloc((inputThreads + 1) * sizeof(sem_t *));
-	semArray2 = (sem_t **)malloc((inputThreads + 1) * sizeof(sem_t *));
-	rope = (pthread_t **)malloc(inputThreads * sizeof(pthread_t *));
-	received = (struct msg *)malloc(sizeof(struct msg));
-
-	// make the mailboxes
-	for (i = 0; i <= inputThreads; i++) {
-		// allocate more memory
-		semArray1[i] = (sem_t *)malloc(sizeof(sem_t));
-		semArray2[i] = (sem_t *)malloc(sizeof(sem_t));
-		sem_init(semArray1[i], 0, 1); //psem
-		sem_init(semArray2[i], 0, 0); //csem
-	}
-
-	// make messages to send
-	step = target / inputThreads;
-	temp = 0;
-	for (i = 0; i < inputThreads; i++) {
-		mailToSend[i] = (struct msg *)malloc(sizeof(struct msg *));
-		mailToSend[i]->iSender = 0;
-		mailToSend[i]->type = RANGE;
-		mailToSend[i]->value1 = temp + 1;
-		temp += step;
-		// last message needs to be different to account for rounding errors
-		mailToSend[i]->value2 = (i == inputThreads - 1) ? target : temp;
-	}
-	
-	// send 'em
-	for (i = 0; i < inputThreads; i++) {
-		SendMsg(i + 1, mailToSend[i]);
-	}
-
-	// make the threads
-	for (i = 0; i < inputThreads; i++) {
-		rope[i] = (pthread_t *)malloc(sizeof(pthread_t *));
-		if (pthread_create(rope[i], NULL, &addit, (void *)(intptr_t)(i + 1))) {
-			printf("error creating thread %d\n", i + 1);
-		}
-	}
-
-	// receive 'em
-	result = 0;
-	for (i = 1; i <= inputThreads; i++) {
-		RecvMsg(0, received);
-		if (received->type != ALLDONE) {
-			printf("Child sent wrong type message\n");
-		}
-		result += received->value1;
-	}
-	
-	printf("The total for 1 to %d using %d threads is %d.\n", target, inputThreads, result);
-
-	return 0;
-	*/
-
-/*
-// waits for a message from the parent, then adds the sum of integers 
-// between message->value1 and message->value2 inclusive
-void *addit(void *arg) {
-	int index, out, i;
-	struct msg *message;
-
-	index = (int)(intptr_t)arg;
-	
-	message = (struct msg *)malloc(sizeof(struct msg));
-
-	RecvMsg(index, message); // wait for mail from parent
-	
-	if (message->type != RANGE) {
-		//printf("Thread received wrong type of message\n");
-	}
-
-	// rewrite message and send it back
-	message->iSender = index;
-	message->type = ALLDONE;
-
-	out = 0;
-	for (i = message->value1; i <= message->value2; i++) {
-		out += i;
-	}
-
-	message->value1 = out;
-
-	SendMsg(0, message); // send the sum back
-
-	return (void *)0;
-}
-*/

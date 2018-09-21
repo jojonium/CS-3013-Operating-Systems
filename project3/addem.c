@@ -91,6 +91,22 @@ int main(int argc, char *argv[]) {
 	
 	printf("The total for 1 to %d using %d threads is %d.\n", target, inputThreads, result);
 
+	// clean up and free memory
+	for (i = 0; i < inputThreads; i++) {
+		free(mailToSend[i]);
+		sem_destroy(semArray1[i]);
+		sem_destroy(semArray2[i]);
+		free(rope[i]);
+	}
+	free(received);
+	sem_destroy(semArray1[inputThreads]);
+	sem_destroy(semArray2[inputThreads]);
+	free(semArray1);
+	free(semArray2);
+	free(rope);
+	free(postOffice);
+	free(mailToSend);
+
 	return 0;
 
 }

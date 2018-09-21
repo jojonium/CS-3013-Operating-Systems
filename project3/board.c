@@ -53,7 +53,7 @@ void *playT(void *arg) {
 
 		if (message->type != GO) {
 			printf("Thread %d expected a GO\n", index);
-		}		
+		}
 
 		// play one generation of the game
 		for (j = bot; j <= top; j++) {
