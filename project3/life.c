@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
 		if (doPrint && iteration > 0) printGrid(boards[iteration % 3], iteration);
 
 		if ((done = checkDone(boards[iteration % 3],
-						boards[(iteration + 1) % 3], boards[(iteration + 2) % 3])) == 1) {
+				boards[(iteration + 1) % 3], boards[(iteration + 2) % 3])) == 1) {
 			printf("Repeating, exiting.\n");
 			break;
 		} else if (done == 2) {
@@ -204,6 +204,30 @@ int main(int argc, char *argv[]) {
 	// print final grid
 	printf("=== Final Board ===\n");
 	printGrid(boards[iteration % 3], iteration);
+
+	// clean up 
+	for (i = 0; i < cols; i++) {
+		free(A[i]);
+		free(B[i]);
+		free(C[i]);
+	}
+	for (i = 0; i < inputThreads; i++) {
+		free(mailToSend[i]);
+		sem_destroy(semArray1[i]);
+		sem_destroy(semArray2[i]);
+		free(rope[i]);
+	}
+	free(A);
+	free(B);
+	free(C);
+	free(postOffice);
+	free(mailToSend);
+	sem_destroy(semArray1[inputThreads]);
+	sem_destroy(semArray2[inputThreads]);
+	free(semArray1);
+	free(semArray2);
+	free(rope);
+	free(received);
 
 	return 0;
 }
