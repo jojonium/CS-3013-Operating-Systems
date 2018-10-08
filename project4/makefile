@@ -2,7 +2,10 @@ CFLAGS = -g -Wall
 LIB = -lpthread
 CC = gcc
 
-all: proj4
+all: proj4 doit
+
+doit: doit.cpp
+	g++ $(CFLAGS) doit.cpp -o doit
 
 proj4: project4.o mailbox.o
 	$(CC) $(CFLAGS) project4.o mailbox.o -o proj4 $(LIB)
@@ -14,4 +17,4 @@ mailbox.o: mailbox.c
 	$(CC) $(CFLAGS) -c mailbox.c -o mailbox.o
 
 clean:
-	rm -f proj4 mailbox.o project4.o
+	rm -f proj4 mailbox.o project4.o doit
