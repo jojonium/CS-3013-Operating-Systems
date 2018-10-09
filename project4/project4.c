@@ -41,6 +41,8 @@ int main(int argc, char *argv[]) {
 	if (argc > 3) {
 		if (strcmp(argv[3], "mmap") == 0) {
 			chunkSize = 0;
+		} else if (argv[3][0] == 'p') {
+			chunkSize = 0;
 		} else {
 			chunkSize = atoi(argv[3]);
 		}
@@ -56,7 +58,13 @@ int main(int argc, char *argv[]) {
 
 	// set number of threads
 	numThreads = 1;
-	if (argc > 4 && argv[4][0] == 'p') {
+	if (chunkSize == 0 && argv[3][0] == 'p') {
+		if ((numThreads=atoi(++argv[3]))<1 || numThreads>MAX_THREADS) {
+			printf("Invalid numThreads, defaulting to %d\n",
+				       	DEFAULT_THREADS);
+			numThreads = DEFAULT_THREADS;
+		}
+	} else if (argc > 4 && argv[4][0] == 'p') {
 		if ((numThreads=atoi(++argv[4]))<1 || numThreads>MAX_THREADS) {
 			printf("Invalid numThreads, defaulting to %d\n",
 				       	DEFAULT_THREADS);
@@ -118,6 +126,7 @@ void read_mode(int chunkSize, int infile) {
 		bufIndex = 0;
 	}
 	close(infile);
+	free(buf);
 
 	printf("File size: %d bytes.\n", fileSize);
 	printf("Occurrences of the string \"%s\": %d\n", pattern, matches);
