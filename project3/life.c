@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
 		if (i >= cols) {
 			i = 0;
 			j++;
-			while ((c = fgetc(fp)) != '\n'); // zoom to end of line
+			while (c != '\n') c = fgetc(fp); // zoom to end of line
 		} else if (c == '1') {
 			A[i][j] = ON;
 			i++;
